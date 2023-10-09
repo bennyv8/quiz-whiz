@@ -29,7 +29,7 @@ const Landing = (props) => {
     } else {
       user_id = profile.userId ;
     }
-    axios.get(`${process.env.REACT_APP_API_URI}/get/getQuizzes`, { params: { id : user_id}})
+    axios.get(`${import.meta.env.VITE_APP_API_URI}/get/getQuizzes`, { params: { id : user_id}})
     .then((response) => {
       setQuizzes(response.data.rows);
       var arr = [];
@@ -61,7 +61,7 @@ const Landing = (props) => {
   if (profile.userId === undefined) {
     return (
       <Container className="Landing" align="center">
-        <Typography variant="h2" align="left" sx={{fontWeight: 400, marginBottom: 2.5}}> Welcome to Quiz Whiz </Typography>
+        <Typography variant="h2" align="center" sx={{fontWeight: 400, marginBottom: 2.5, marginTop: 2.5}}> Welcome to Quiz Whiz </Typography>
         <CategoryList setCategory={setCategory} category={category}/>
         <Typography variant="h6" align="center" sx={{fontWeight: 400, marginBottom: 2.5}}> Login to see all Quizzes </Typography>
         <QuizList category={category} quizzes={quizzes}/>

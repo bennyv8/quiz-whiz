@@ -11,15 +11,14 @@ export const QuizContext = createContext();
 
 // Create the provider component
 export const QuizProvider = ({ children }) => {
- 
   // Set up state variables here
   let { id } = useParams();
   const { isLoggedIn } = useContext(UserContext);
   const [open, setOpen] = useState(false);
- 
+
   const [quizDetails, setQuizDetails] = useState([{}]);
   const [quizStart, setQuizStart] = useState(null);
-  
+
   const [quizEnd, setQuizEnd] = useState(null);
   const [time, setTime] = useState(300000);
   const [questions, setQuestions] = useState([{}]);
@@ -38,7 +37,7 @@ export const QuizProvider = ({ children }) => {
     try {
       const payload = await axios({
         method: "GET",
-        url: `${process.env.REACT_APP_API_URI}/quiz/${id}/start`,
+        url: `${import.meta.env.VITE_APP_API_URI}/quiz/${id}/start`,
       });
       payload && setQuizDetails(payload.data);
     } catch (err) {
@@ -50,7 +49,7 @@ export const QuizProvider = ({ children }) => {
     try {
       const payload = await axios({
         method: "GET",
-        url: `${process.env.REACT_APP_API_URI}/quiz/${id}/question`,
+        url: `${import.meta.env.VITE_APP_API_URI}/quiz/${id}/question`,
       });
 
       let quizQs = payload && JSON.parse(payload.data);
@@ -99,8 +98,8 @@ export const QuizProvider = ({ children }) => {
   };
 
   const calculateDuration = () => {
-      setQuizEnd(Date.now());
-      setQuizStart(JSON.parse(localStorage.getItem('start')));
+    setQuizEnd(Date.now());
+    setQuizStart(JSON.parse(localStorage.getItem("start")));
   };
 
   const calculateScore = () => {
@@ -125,7 +124,10 @@ export const QuizProvider = ({ children }) => {
     };
 
     try {
-      let res = await axios.post(`${process.env.REACT_APP_API_URI}/quiz/${payload.quiz_id}`, body);
+      let res = await axios.post(
+        `${import.meta.env.VITE_APP_API_URI}/quiz/${payload.quiz_id}`,
+        body
+      );
       if (res.status === 200) {
         setSaved(true);
       }
@@ -137,7 +139,7 @@ export const QuizProvider = ({ children }) => {
   const formatDuration = (duration) => {
     let min = Math.ceil((duration / 1000 / 60) << 0);
     let sec = Math.ceil((duration / 1000) % 60);
-    
+
     return `00:${min.toString().length < 2 ? "0" + min : min}:${
       sec === 0 ? "00" : sec.toString().length < 2 ? "0" + sec : sec
     }`;
@@ -154,31 +156,31 @@ export const QuizProvider = ({ children }) => {
 
       if (message === "Back Home") {
         window.location.href = "/";
-      } if (message === "Dashboard") {
+      }
+      if (message === "Dashboard") {
         window.location.href = isLoggedIn ? "/dashboard" : "/";
-      } else if (message === 'Restart Quiz') {
+      } else if (message === "Restart Quiz") {
         window.location.href = `/quiz/${id}/start`;
       } else {
-        console.log('There was a problem abandoning the quiz');
-      } 
-
+        console.log("There was a problem abandoning the quiz");
+      }
     } else {
       setOpen(false);
 
-      if (buttonText === 'Sign Up') {
+      if (buttonText === "Sign Up") {
         window.location.href = "/register";
-      } else if (buttonText === 'Login') {
+      } else if (buttonText === "Login") {
         window.location.href = "/login";
-      } else if (buttonText === 'Home') {
+      } else if (buttonText === "Home") {
         window.location.href = "/";
       } else {
-        console.log('There was a problem in Quiz Modal');
+        console.log("There was a problem in Quiz Modal");
       }
     }
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   const handleQuizStart = () => {
     resetQuiz();
     localStorage.setItem(`start`, JSON.stringify(Date.now()));
@@ -186,9 +188,9 @@ export const QuizProvider = ({ children }) => {
   };
 
   const resetStyles = () => {
-    document.querySelectorAll('.btn').forEach(item => {
-      item.setAttribute('style', 'null')
-    })
+    document.querySelectorAll(".btn").forEach((item) => {
+      item.setAttribute("style", "null");
+    });
   };
 
   // =============================================
@@ -206,23 +208,19 @@ export const QuizProvider = ({ children }) => {
   }, [id]);
 
   useEffect(() => {
-    if (quizStart) { 
+    if (quizStart) {
       if (quizEnd) {
         setDuration(quizEnd - quizStart);
       }
-    };
+    }
   }, [quizStart, quizEnd]);
-  
+
   // Set Summary Message based on User's Quiz Score
   useEffect(() => {
-    if (finished) {
-      if (score > 60) {
-       setMsg("Congratulations, You Passed!");
-     } else if (score <= 60) {
-       setMsg("Oh no! You didn't pass, would you like to try again?");
-     }
-    } else {
-      setMsg("Oh no! You ran out of time. Would you like to try again?");
+    if (score > 60) {
+      setMsg("Congratulations, You Passed!");
+    } else if (score <= 60) {
+      setMsg("Oh no! You didn't pass, would you like to try again?");
     }
   }, [finished, score, setMsg, saved]);
 
@@ -235,8 +233,8 @@ export const QuizProvider = ({ children }) => {
 
     quizDetails,
     setQuizDetails,
-    
-    time, 
+
+    time,
     setTime,
 
     resetQuiz,
@@ -270,7 +268,7 @@ export const QuizProvider = ({ children }) => {
     calculateDuration,
     saved,
     setSaved,
-    resetStyles
+    resetStyles,
   };
 
   // Return the provider component with the context value

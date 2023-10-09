@@ -1,5 +1,3 @@
-\connect quizwhiz;
-
 BEGIN;
 
 CREATE SCHEMA quizwhiz;
